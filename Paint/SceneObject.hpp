@@ -17,10 +17,7 @@ protected:
 	glm::mat4 transform;
 	glm::vec3 color;
 
-	inline static glm::vec2 ReverseTransform(glm::vec2& point, glm::mat4& transform)
-	{
-		return glm::inverse(transform) * glm::vec4(point, 0.f, 0.f);
-	}
+	inline static glm::vec2 ReverseTransform(glm::vec2& point, glm::mat4& transform) { return glm::inverse(transform) * glm::vec4(point, 0.f, 0.f); }
 
 	static void DrawObject(const OGLObject& obj, const glm::mat4& world) {
 		glUniformMatrix4fv(ul("world"), 1, GL_FALSE, glm::value_ptr(world));
@@ -39,11 +36,25 @@ public:
 
 	virtual ~SceneObject() = default;
 
+	inline glm::mat4 GetTransform() const { return this->transform; }
+
+	inline void SetTransform(const glm::mat4 transform) { this->transform = transform; }
+
+	inline glm::vec3 GetColor() const { return this->color; }
+
+	inline void SetColor(const glm::vec3& color, const float strength) { this->color = this->color * (1.f - strength) + color * strength; }
+
 	virtual bool IsHit(glm::vec2& point) = 0;
 
 	inline static void Render(const GLuint& programID, const SceneObject* sceneObject)
 	{
 		glProgramUniform3fv(programID, ul(programID, "color"), 1, glm::value_ptr(sceneObject->color));
 		SceneObject::DrawObject(sceneObject->oglObject, sceneObject->transform);
+	}
+
+	inline static void Render(const GLuint& programID, const SceneObject* sceneObject, const glm::mat4 transform)
+	{
+		glProgramUniform3fv(programID, ul(programID, "color"), 1, glm::value_ptr(sceneObject->color));
+		SceneObject::DrawObject(sceneObject->oglObject, transform * sceneObject->transform);
 	}
 };

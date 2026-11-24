@@ -62,7 +62,7 @@ void App::CleanTextures() const
 
 void App::InitObjects()
 {
-	const size_t size = 3;
+	const size_t size = 30;
 
 	const float sizeF = static_cast<float>(size);
 	const float offset = (sizeF - 1.f) / 2.f;
@@ -73,9 +73,9 @@ void App::InitObjects()
 		for (size_t x = 0; x < size; ++x)
 		{
 			objects.push_back(
-				new Circle(
+				new Square(
 					glm::translate(glm::vec3((static_cast<float>(x) - offset), (static_cast<float>(y) - offset), 0.f) * 2.f / sizeF) *
-					glm::scale(glm::vec3(scale, scale, 0.f)),
+					glm::scale(glm::vec3(scale, scale, 1.f)),
 					glm::vec3(static_cast<float>((y + x) % 2))
 				)
 			);
@@ -119,7 +119,7 @@ void App::Clean()
 
 void App::Update(const SUpdateInfo& updateInfo)
 {
-	m_ElapsedTimeInSec = updateInfo.ElapsedTimeInSec;
+	elapsedTimeInSec = updateInfo.ElapsedTimeInSec;
 }
 
 void App::SetCommonUniforms()
@@ -136,6 +136,8 @@ void App::Render()
 	glUseProgram(programID);
 
 	glBindSampler(0, samplerID);
+
+	SceneObject::Render(programID, marker, glm::translate(glm::vec3(mousePosition, 0.f)));
 
 	for (const SceneObject* object : objects)
 		SceneObject::Render(programID, object);
@@ -185,12 +187,12 @@ void App::KeyboardUp(const SDL_KeyboardEvent& key)
 
 void App::MouseMove(const SDL_MouseMotionEvent& mouse)
 {
-
+	mousePosition = camera.PositionToCenter(windowSize, glm::vec2(mouse.x, mouse.y));
 }
 
 void App::MouseDown(const SDL_MouseButtonEvent& mouse)
 {
-	pickedPixel = { mouse.x, mouse.y };
+
 }
 
 void App::MouseUp(const SDL_MouseButtonEvent& mouse)

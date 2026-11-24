@@ -19,6 +19,7 @@
 
 // Mine
 #include "SceneObject.hpp"
+#include "Circle.hpp"
 
 struct SUpdateInfo
 {
@@ -58,19 +59,12 @@ public:
 protected:
 	void SetupDebugCallback();
 
-	// Other data
-
-	float m_ElapsedTimeInSec = 0.0f;
-
-	// Picking
-
-	glm::ivec2 pickedPixel = glm::ivec2(0, 0);
-
 	glm::uvec2 windowSize = glm::uvec2(0, 0);
-
-	// Camera
-
 	Camera camera;
+	float elapsedTimeInSec = 0.0f;
+
+	glm::vec2 mousePosition = glm::vec2(0.f, 0.f);
+	SceneObject* marker = new Circle(glm::scale(glm::vec3(0.03f, 0.03f, 1.f)), glm::vec3(1, 0, 0));
 
 	// Shader
 
