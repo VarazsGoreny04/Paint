@@ -66,6 +66,9 @@ protected:
 	glm::vec2 mousePosition = glm::vec2(0.f, 0.f);
 	SceneObject* marker = new Circle(glm::scale(glm::vec3(0.03f, 0.03f, 1.f)), glm::vec3(1, 0, 0));
 
+	int nextImageSize = 2;
+	int imageSize = 2;
+
 	// Shader
 
 	GLuint programID = 0;

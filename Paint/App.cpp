@@ -7,6 +7,7 @@
 #include "SceneObject.hpp"
 #include "Square.hpp"
 #include "Circle.hpp"
+#include "ImageHandler.hpp"
 
 App::App() {}
 
@@ -62,7 +63,9 @@ void App::CleanTextures() const
 
 void App::InitObjects()
 {
-	const size_t size = 30;
+	objects.clear();
+
+	const size_t size = imageSize;
 
 	const float sizeF = static_cast<float>(size);
 	const float offset = (sizeF - 1.f) / 2.f;
@@ -137,6 +140,13 @@ void App::Render()
 
 	glBindSampler(0, samplerID);
 
+	if (nextImageSize != imageSize)
+	{
+		imageSize = nextImageSize;
+
+		InitObjects();
+	}
+
 	SceneObject::Render(programID, marker, glm::translate(glm::vec3(mousePosition, 0.f)));
 
 	for (const SceneObject* object : objects)
@@ -154,7 +164,7 @@ void App::RenderGUI()
 {
 	if (ImGui::Begin("Variables"))
 	{
-
+		ImGui::SliderInt("Side length", &nextImageSize, 1, 50);
 	}
 	ImGui::End();
 }
@@ -192,7 +202,12 @@ void App::MouseMove(const SDL_MouseMotionEvent& mouse)
 
 void App::MouseDown(const SDL_MouseButtonEvent& mouse)
 {
+	std::vector<std::shared_ptr<glm::vec3>> data;
 
+	for (SceneObject* object : objects)
+		data.push_back(std::make_unique<glm::vec3>(object->GetColor()));
+
+	ImageHandler::SaveBMP("image.bmp", data);
 }
 
 void App::MouseUp(const SDL_MouseButtonEvent& mouse)

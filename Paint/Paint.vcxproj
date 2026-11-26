@@ -139,6 +139,7 @@
     <ClInclude Include="App.hpp" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="Circle.hpp" />
+    <ClInclude Include="ImageHandler.hpp" />
     <ClInclude Include="SceneObject.hpp" />
     <ClInclude Include="Square.hpp" />
   </ItemGroup>
